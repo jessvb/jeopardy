@@ -3,6 +3,8 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import styles from './Styles';
 import Card from './Card';
+import Title from './Title';
+import Box from '@material-ui/core/Box';
 
 class Game extends React.Component {
   constructor(props) {
@@ -24,12 +26,12 @@ class Game extends React.Component {
     }
     return (
       <div className={classes.root}>
-        <Grid container 
-        spacing={0}
-        direction="column"
-        alignItems="center"
-        justify="center"
-        style={{ minHeight: '100vh' }}
+        <Grid container
+          spacing={0}
+          direction="column"
+          alignItems="center"
+          justify="center"
+          style={{ minHeight: '100vh' }}
         >
           {cardrows}
         </Grid>
@@ -43,12 +45,26 @@ function CardRow(props) {
   let pts = (props.currRow + 1) * 100;
   for (let i = 0; i < props.numCol; i++) {
     let keyid = "col" + i + "-" + pts;
-    cards[i] = (<Grid item xs key={keyid}>
-      <Card
-        text={pts}
-        col={i}
-        key={keyid}
-      /></Grid>);
+    if (props.currRow !== 0) {
+      cards[i] = (<Grid item xs key={keyid}>
+        <Card
+          text={pts}
+          col={i}
+          key={keyid}
+        /></Grid>);
+    } else {
+      // If it's the first row, put category titles:
+      cards[i] = <Grid item xs key={keyid}>
+        <Box  mb={2}>
+          <Title text={"Category Name " + i} titleType='category' />
+        </Box>
+        <Card
+          text={pts}
+          col={i}
+          key={keyid}
+        />
+      </Grid>;
+    }
   }
   return (
     <React.Fragment>
