@@ -3,13 +3,17 @@ function styles(theme) {
         root: {
             flexGrow: 1,
             backgroundColor: 'white',
+            marginTop: theme.spacing(2),
         },
         card: {
             padding: theme.spacing(1),
+            paddingTop: theme.spacing(5),
+            paddingBottom: theme.spacing(5),
             textAlign: 'center',
             color: theme.palette.text.secondary,
             whiteSpace: 'nowrap',
             marginBottom: theme.spacing(2),
+            fontSize: 28,
         },
         card0: {
             backgroundColor: '#ffe3e4',

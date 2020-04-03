@@ -16,7 +16,7 @@ class Game extends React.Component {
   render() {
     const { classes } = this.props;
     let cardrows = [];
-    for (let i = 0; i < this.props.numCategories; i++) {
+    for (let i = 0; i < 5; i++) {
       let keyid = "row" + (i + 1) * 100;
       cardrows[i] = <Grid container item xs={10} spacing={3} key={keyid}>
         <CardRow numCol={this.props.numCategories} currRow={i} key={keyid} />
@@ -24,7 +24,13 @@ class Game extends React.Component {
     }
     return (
       <div className={classes.root}>
-        <Grid container spacing={1}>
+        <Grid container 
+        spacing={0}
+        direction="column"
+        alignItems="center"
+        justify="center"
+        style={{ minHeight: '100vh' }}
+        >
           {cardrows}
         </Grid>
       </div>
