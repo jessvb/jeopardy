@@ -5,7 +5,7 @@ function styles(theme) {
             backgroundColor: 'white',
             marginTop: theme.spacing(2),
         },
-        card: {
+        pointsCard: {
             padding: theme.spacing(1),
             paddingTop: theme.spacing(5),
             paddingBottom: theme.spacing(5),

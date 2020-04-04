@@ -2,7 +2,7 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import styles from './Styles';
-import Card from './Card';
+import PointsCard from './PointsCard';
 import Title from './Title';
 import Box from '@material-ui/core/Box';
 import Papa from 'papaparse';
@@ -11,9 +11,10 @@ class Game extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      currState: 'board', // board, question, hint, answer
       categories: null,
-      cardStates: Array(Array(5).fill(null)),
-      currState: 'board', // board, q, h, a (question, hint, answer)
+      cardStates: Array(Array(5).fill(null)), // done question -> checkmark
+      currCardInd: { col: null, row: null }, // TODO: when you click on a card, update the index
       csv: null,
     };
   }
@@ -49,19 +50,69 @@ class Game extends React.Component {
     return categories;
   }
 
+  /**
+   * Reads the applicable question from the csv, given the row/column of the card.
+   */
+  getQuestion(row, col) {
+    return this.readInfo(this.state.csv, 'q' + row)[col];
+  }
+
+  /**
+   * Reads the applicable answer from the csv, given the row/column of the card.
+   */
+  getAnswer(row, col) {
+    return this.readInfo(this.state.csv, 'a' + row)[col];
+  }
+
+  /**
+   * Reads the applicable hint from the csv, given the row/column of the card
+   * and the hint number (1-3).
+   */
+  getHint(row, col, num) {
+    return this.readInfo(this.state.csv, 'h' + row + '_' + (num-1))[col];
+  }
+
+  /**
+   * Calculates the number of points based on the row index of the card.
+   * @param {*} row : index of the row (0-4)
+   */
+  static getPoints(row) {
+    return (row + 1) * 100;
+  }
+
   render() {
     const { classes } = this.props;
-    let cardrows;
+    let currGameBoard;
     if (!this.state.categories) {
       // render loading state:
-      cardrows = (<div>Loading...</div>);
+      currGameBoard = (<div>Loading...</div>);
     } else {
-      cardrows = [];
-      for (let i = 0; i < 5; i++) {
-        let keyid = "row" + (i + 1) * 100;
-        cardrows[i] = <Grid container item xs={10} spacing={3} key={keyid}>
-          <CardRow categories={this.state.categories} currRow={i} key={keyid} />
-        </Grid>
+      switch (this.state.currState) {
+        case 'board':
+          currGameBoard = [];
+          for (let i = 0; i < 5; i++) {
+            let keyid = "row" + Game.getPoints(i);
+            currGameBoard[i] = <Grid container item xs={10} spacing={3} key={keyid}>
+              <CardRow categories={this.state.categories} currRow={i} key={keyid} />
+            </Grid>
+          }
+          break;
+        case 'question':
+          currGameBoard = <PointsCard
+            text={this.getQuestion(this.state.currCardInd.row, this.state.currCardInd.col)}
+            category={this.state.categories[this.state.currCardInd.col]}
+            pts={Game.getPoints(this.state.currCardInd.row)}
+            col={this.state.currCardInd.col}
+            key={'question'}
+          />
+          break;
+        case 'hint':
+          break;
+        case 'answer':
+          break;
+        default:
+          currGameBoard = (<div>That's strange! The system reached an unknown state...
+            Please try refreshing.</div>);
       }
     }
     return (
@@ -72,7 +123,7 @@ class Game extends React.Component {
           alignItems="center"
           justify="center"
           style={{ minHeight: '100vh' }}
-        >{cardrows}
+        >{currGameBoard}
         </Grid>
       </div>
     );
@@ -81,12 +132,12 @@ class Game extends React.Component {
 
 function CardRow(props) {
   let cards = [];
-  let pts = (props.currRow + 1) * 100;
+  let pts = Game.getPoints(props.currRow);
   for (let col = 0; col < props.categories.length; col++) {
     let keyid = "col" + col + "-" + pts;
     if (props.currRow !== 0) {
       cards[col] = (<Grid item xs key={keyid}>
-        <Card
+        <PointsCard
           text={pts}
           col={col}
           key={keyid}
@@ -97,7 +148,7 @@ function CardRow(props) {
         <Box mb={2}>
           <Title text={props.categories[col]} titleType='category' />
         </Box>
-        <Card
+        <PointsCard
           text={pts}
           col={col}
           key={keyid}
