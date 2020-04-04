@@ -5,7 +5,7 @@ import Game from './Game';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Game numCategories={5} />
+    <Game />
   </React.StrictMode>,
   document.getElementById('root')
 );
