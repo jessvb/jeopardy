@@ -3,6 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import styles from './Styles';
 import PointsCard from './PointsCard';
+import QuestionCard from './QuestionCard';
 import Title from './Title';
 import Box from '@material-ui/core/Box';
 import Papa from 'papaparse';
@@ -14,7 +15,7 @@ class Game extends React.Component {
       currState: 'board', // board, question, hint, answer
       categories: null,
       cardStates: Array(Array(5).fill(null)), // done question -> checkmark
-      currCardInd: { col: null, row: null }, // TODO: when you click on a card, update the index
+      currCardInd: { col: 1, row: 3 }, // TODO: when you click on a card, update the index
       csv: null,
     };
   }
@@ -98,8 +99,8 @@ class Game extends React.Component {
           }
           break;
         case 'question':
-          currGameBoard = <PointsCard
-            text={this.getQuestion(this.state.currCardInd.row, this.state.currCardInd.col)}
+          currGameBoard = <QuestionCard
+            question={this.getQuestion(this.state.currCardInd.row, this.state.currCardInd.col)}
             category={this.state.categories[this.state.currCardInd.col]}
             pts={Game.getPoints(this.state.currCardInd.row)}
             col={this.state.currCardInd.col}

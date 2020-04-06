@@ -14,7 +14,9 @@ class PointsCard extends React.Component {
     render() {
         const { classes } = this.props;
         return (
-            <Paper className={clsx(classes.pointsCard, this.getColourClass())} >{this.props.text}</Paper>
+            <Paper className={clsx(classes.pointsCard, this.getColourClass())} wrap="nowrap" >
+                {this.props.text}
+            </Paper>
         );
     }
 }

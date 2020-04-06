@@ -3,7 +3,46 @@ function styles(theme) {
         root: {
             flexGrow: 1,
             backgroundColor: 'white',
-            marginTop: theme.spacing(2),
+        },
+        titleCardZone: {
+            textAlign: 'center',
+            color: theme.palette.text.secondary,
+            fontSize: '7vh',
+
+            // grid layout:
+            display: 'grid',
+            gridGap: theme.spacing(3),
+            gridTemplateRow: '1fr 10fr',
+            justifyItems: 'center',
+            paddingTop: '1vh',
+            paddingBottom: '5vh',
+        },
+        qaCard: {
+            width: '50vw',
+            minHeight: '50vh',
+            paddingTop: '5vh',
+            paddingBottom: '5vh',
+            paddingLeft: '10vw',
+            paddingRight: '10vw',
+            textAlign: 'center',
+            color: theme.palette.text.primary,
+            fontSize: '7vh',
+
+            // grid layout:
+            display: 'grid',
+            gridGap: theme.spacing(3),
+            gridTemplateRows: '4fr 1fr',
+        },
+        btnZone: {
+            // grid layout:
+            display: 'grid',
+            gridGap: theme.spacing(3),
+            gridTemplateColumns: '1fr 1fr'
+        },
+        verticalCenter: {
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
         },
         pointsCard: {
             padding: theme.spacing(1),
