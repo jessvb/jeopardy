@@ -25,8 +25,29 @@ class QuestionCard extends React.Component {
                     </Grid>
                     <Grid item>
                         <Grid container className={classes.btnZone}>
-                            <Grid item>btn 1</Grid>
-                            <Grid item>btn 2</Grid>
+                            <Grid item >
+                                <Paper>
+                                    <Grid container className={classes.hintZone}>
+                                        <Grid item className={classes.verticalCenter}>
+                                            Hints
+                                    </Grid>
+                                        <Grid item className={classes.hintBtnZone}>
+                                            <Paper className={clsx(classes.verticalCenter, classes.hintBtn)}>
+                                                1
+                                            </Paper>
+                                            <Paper className={clsx(classes.verticalCenter, classes.hintBtn)}>
+                                                2
+                                            </Paper>
+                                            <Paper className={clsx(classes.verticalCenter, classes.hintBtn)}>
+                                                3
+                                            </Paper>
+                                        </Grid>
+                                    </Grid>
+                                </Paper>
+                            </Grid>
+                            <Paper className={clsx(classes.verticalCenter, classes.answerBtnZone)}>
+                                Answer
+                            </Paper>
                         </Grid>
                     </Grid>
                 </Paper>

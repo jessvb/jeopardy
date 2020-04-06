@@ -36,8 +36,37 @@ function styles(theme) {
         btnZone: {
             // grid layout:
             display: 'grid',
-            gridGap: theme.spacing(3),
-            gridTemplateColumns: '1fr 1fr'
+            gridGap: '15vw',
+            gridTemplateColumns: '1fr 1fr',
+        },
+        hintZone: {
+            minHeight: '10vh',
+            color: theme.palette.text.secondary,
+            fontSize: '3vh',
+            paddingTop: '1vh',
+            paddingBottom: '2vh',
+
+            // grid layout:
+            display: 'grid',
+            gridTemplateRows: '1fr 1fr',
+            gridGap: '1vh',
+        },
+        hintBtnZone: {
+            fontSize: '2vh',
+            marginLeft: '2vw',
+            marginRight: '2vw',
+
+            // grid layout:
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr 1fr',
+            gridGap: '2vw',
+        },
+        hintBtn: {
+            backgroundColor: '#f5f5f5'
+        },
+        answerBtnZone: {
+            fontSize: '4vh',
+            color: theme.palette.text.secondary,
         },
         verticalCenter: {
             display: "flex",
