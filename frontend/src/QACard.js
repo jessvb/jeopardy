@@ -48,11 +48,33 @@ class QACard extends React.Component {
         return classes[('card' + colourNum)];
     }
 
+    getHintBtn(hint, hintNum) {
+        const { classes } = this.props;
+        let hintBtn = // default (no hint) is greyed out:
+            (<Paper
+                className={clsx(classes.verticalCenter, classes.hintBtn)}
+                style={{ backgroundColor: 'darkgrey' }}>
+                {hintNum}
+            </Paper>);
+        if (hint) {
+            hintBtn = // there is a hint, so add an onclick etc:
+                (<Paper
+                    className={clsx(classes.verticalCenter, classes.hintBtn)}
+                    onClick={() => (this.props.setCurrState('hint', hint))}>
+                    {hintNum}
+                </Paper>);
+        }
+        return hintBtn;
+    }
+
     render() {
         const { classes } = this.props;
         let btns;
         switch (this.props.currState) {
             case 'question':
+                let hint1btn = this.getHintBtn(this.props.hint1, 1);
+                let hint2btn = this.getHintBtn(this.props.hint2, 2);
+                let hint3btn = this.getHintBtn(this.props.hint3, 3);
                 btns = (
                     <Grid container className={classes.btnZone}>
                         <Grid item >
@@ -62,22 +84,9 @@ class QACard extends React.Component {
                                         Hints
                                         </Grid>
                                     <Grid item className={classes.hintBtnZone}>
-                                        {/* TODO: update bg & remove click handler if no hint */}
-                                        <Paper
-                                            className={clsx(classes.verticalCenter, classes.hintBtn)}
-                                            onClick={() => (this.props.setCurrState('hint', this.props.hint1))}>
-                                            1
-                                        </Paper>
-                                        <Paper
-                                            className={clsx(classes.verticalCenter, classes.hintBtn)}
-                                            onClick={() => (this.props.setCurrState('hint', this.props.hint2))}>
-                                            2
-                                        </Paper>
-                                        <Paper
-                                            className={clsx(classes.verticalCenter, classes.hintBtn)}
-                                            onClick={() => (this.props.setCurrState('hint', this.props.hint3))}>
-                                            3
-                                        </Paper>
+                                        {hint1btn}
+                                        {hint2btn}
+                                        {hint3btn}
                                     </Grid>
                                 </Grid>
                             </Paper>
@@ -86,7 +95,7 @@ class QACard extends React.Component {
                             className={clsx(classes.verticalCenter, classes.answerBtnZone)}
                             onClick={() => (this.props.setCurrState('answer'))}>
                             Answer
-                    </Paper>
+                        </Paper>
                     </Grid>);
                 break;
             case 'hint':
