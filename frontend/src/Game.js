@@ -11,13 +11,31 @@ import Papa from 'papaparse';
 class Game extends React.Component {
   constructor(props) {
     super(props);
+    this.setCurrState = this.setCurrState.bind(this);
     this.state = {
       currState: 'board', // board, question, hint, answer
       categories: null,
       cardStates: Array(Array(5).fill(null)), // done question -> checkmark
-      currCardInd: { col: 1, row: 3 }, // TODO: when you click on a card, update the index
+      currCardInd: { col: null, row: null },
+      currHintNum: null,
       csv: null,
     };
+  }
+
+  /**
+   * Handler to set the Game state (i.e., whether the view shows the game board, a
+   * question, a hint, or an answer) from within a subcomponent (i.e., a QuestionCard).
+   * @param {*} state : string containing, 'board', 'question', 'hint', or 'answer'
+   */
+  setCurrState(state, hintNum, currCardInd) {
+    let newState = { currState: state };
+    if (hintNum) {
+      newState.currHintNum = hintNum;
+    }
+    if (currCardInd) {
+      newState.currCardInd = currCardInd;
+    }
+    this.setState(newState);
   }
 
   componentDidMount() {
@@ -70,7 +88,7 @@ class Game extends React.Component {
    * and the hint number (1-3).
    */
   getHint(row, col, num) {
-    return this.readInfo(this.state.csv, 'h' + row + '_' + (num-1))[col];
+    return this.readInfo(this.state.csv, 'h' + row + '_' + (num - 1))[col];
   }
 
   /**
@@ -84,28 +102,37 @@ class Game extends React.Component {
   render() {
     const { classes } = this.props;
     let currGameBoard;
+    let extraRootStyle = {};
     if (!this.state.categories) {
       // render loading state:
       currGameBoard = (<div>Loading...</div>);
     } else {
       switch (this.state.currState) {
         case 'board':
+          extraRootStyle = {};
           currGameBoard = [];
           for (let i = 0; i < 5; i++) {
             let keyid = "row" + Game.getPoints(i);
             currGameBoard[i] = <Grid container item xs={10} spacing={3} key={keyid}>
-              <CardRow categories={this.state.categories} currRow={i} key={keyid} />
+              <CardRow
+                categories={this.state.categories}
+                currRow={i}
+                setCurrState={this.setCurrState}
+                key={keyid} />
             </Grid>
           }
           break;
         case 'question':
-          currGameBoard = <QuestionCard
-            question={this.getQuestion(this.state.currCardInd.row, this.state.currCardInd.col)}
-            category={this.state.categories[this.state.currCardInd.col]}
-            pts={Game.getPoints(this.state.currCardInd.row)}
-            col={this.state.currCardInd.col}
-            key={'question'}
-          />
+          extraRootStyle = { backgroundColor: '#f8f8f8' };
+          currGameBoard =
+            <QuestionCard
+              question={this.getQuestion(this.state.currCardInd.row, this.state.currCardInd.col)}
+              category={this.state.categories[this.state.currCardInd.col]}
+              pts={Game.getPoints(this.state.currCardInd.row)}
+              col={this.state.currCardInd.col}
+              setCurrState={this.setCurrState}
+              key={'question'}
+            />
           break;
         case 'hint':
           break;
@@ -113,11 +140,11 @@ class Game extends React.Component {
           break;
         default:
           currGameBoard = (<div>That's strange! The system reached an unknown state...
-            Please try refreshing.</div>);
+            Try refreshing.</div>);
       }
     }
     return (
-      <div className={classes.root}>
+      <div className={classes.root} style={extraRootStyle}>
         <Grid container
           spacing={0}
           direction="column"
@@ -141,6 +168,8 @@ function CardRow(props) {
         <PointsCard
           text={pts}
           col={col}
+          row={props.currRow}
+          setCurrState={props.setCurrState}
           key={keyid}
         /></Grid>);
     } else {
@@ -152,6 +181,8 @@ function CardRow(props) {
         <PointsCard
           text={pts}
           col={col}
+          row={props.currRow}
+          setCurrState={props.setCurrState}
           key={keyid}
         />
       </Grid>;

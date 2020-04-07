@@ -12,9 +12,16 @@ class PointsCard extends React.Component {
         return classes[('card' + colourNum)];
     }
     render() {
-        const { classes } = this.props;
+        const { classes, setCurrState, row, col } = this.props;
         return (
-            <Paper className={clsx(classes.pointsCard, this.getColourClass())} wrap="nowrap" >
+            <Paper
+                className={clsx(classes.pointsCard, this.getColourClass())}
+                wrap="nowrap"
+                onClick={function () {
+                    console.log('clicked card');
+                    setCurrState('question', null, { row: row, col: col });
+                }}
+            >
                 {this.props.text}
             </Paper>
         );

@@ -66,7 +66,7 @@ function styles(theme) {
         },
         answerBtnZone: {
             fontSize: '4vh',
-            color: theme.palette.text.secondary,
+            color: theme.palette.text.primary,
         },
         verticalCenter: {
             display: "flex",
