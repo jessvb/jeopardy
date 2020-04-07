@@ -45,7 +45,14 @@ class QACard extends React.Component {
         const { classes } = this.props;
         // get a number between 0 & 4 based on the column:
         const colourNum = this.props.col - 5 * Math.floor(this.props.col / 5);
-        return classes[('card' + colourNum)];
+        // if in answer state, the colour will be slightly lighter
+        let classCode = '';
+        if (this.props.currState === 'answer') {
+            classCode = ('cardAns' + colourNum);
+        } else {
+            classCode = ('card' + colourNum);
+        }
+        return classes[classCode];
     }
 
     getHintBtn(hint, hintNum) {
@@ -82,7 +89,7 @@ class QACard extends React.Component {
                                 <Grid container className={classes.hintZone}>
                                     <Grid item className={classes.verticalCenter}>
                                         Hints
-                                        </Grid>
+                                    </Grid>
                                     <Grid item className={classes.hintBtnZone}>
                                         {hint1btn}
                                         {hint2btn}
@@ -99,10 +106,31 @@ class QACard extends React.Component {
                     </Grid>);
                 break;
             case 'hint':
-                btns = null; // todo 'go back' buttons
+                btns = (
+                    <div className={classes.goBackBtnZone}>
+                        <Paper
+                            className={clsx(classes.verticalCenter, classes.goBackBtn)} // todo(eventually): update go back btn style
+                            onClick={() => (this.props.setCurrState('question'))}>
+                            Go Back
+                            </Paper>
+                    </div>
+                );
                 break;
             case 'answer':
-                btns = null; // todo 'team won' buttons
+                btns = (
+                    <Grid container className={classes.teamPtsBtnZone}>
+                        <Paper
+                            className={clsx(classes.verticalCenter, classes.teamPtsBtn)}
+                            onClick={() => (this.props.setCurrState('board'))}>
+                            {this.props.pts} for Team 1
+                        </Paper>
+                        <Paper
+                            className={clsx(classes.verticalCenter, classes.teamPtsBtn)}
+                            onClick={() => (this.props.setCurrState('board'))}>
+                            {this.props.pts} for Team 2
+                        </Paper>
+                    </Grid>
+                );
                 break;
             default:
                 btns = (<div>That's strange! The system reached an unknown state...

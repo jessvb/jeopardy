@@ -8,7 +8,6 @@ function styles(theme) {
             textAlign: 'center',
             color: theme.palette.text.secondary,
             fontSize: '7vh',
-
             // grid layout:
             display: 'grid',
             gridGap: theme.spacing(3),
@@ -27,7 +26,6 @@ function styles(theme) {
             textAlign: 'center',
             color: theme.palette.text.primary,
             fontSize: '7vh',
-
             // grid layout:
             display: 'grid',
             gridGap: theme.spacing(3),
@@ -45,7 +43,6 @@ function styles(theme) {
             fontSize: '3vh',
             paddingTop: '1vh',
             paddingBottom: '2vh',
-
             // grid layout:
             display: 'grid',
             gridTemplateRows: '1fr 1fr',
@@ -55,7 +52,6 @@ function styles(theme) {
             fontSize: '2vh',
             marginLeft: '2vw',
             marginRight: '2vw',
-
             // grid layout:
             display: 'grid',
             gridTemplateColumns: '1fr 1fr 1fr',
@@ -67,6 +63,36 @@ function styles(theme) {
         answerBtnZone: {
             fontSize: '4vh',
             color: theme.palette.text.primary,
+        },
+        goBackBtn: {
+            width: '20vw',
+            paddingTop: '1vh',
+            paddingBottom: '1vh',
+            paddingLeft: '2vw',
+            paddingRight: '2vw',
+        },
+        goBackBtnZone: {
+            fontSize: '4vh',
+            color: theme.palette.text.primary,
+            textAlign: 'center',
+            // grid layout:
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+        teamPtsBtnZone: {
+            fontSize: '4vh',
+            color: theme.palette.text.primary,
+            // grid layout:
+            display: 'grid',
+            gridGap: '5vw',
+            gridTemplateColumns: '1fr 1fr',
+        },
+        teamPtsBtn: {
+            paddingTop: '2vh',
+            paddingBottom: '2vh',
+            paddingLeft: '2vw',
+            paddingRight: '2vw',
         },
         verticalCenter: {
             display: "flex",
