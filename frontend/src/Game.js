@@ -15,7 +15,7 @@ class Game extends React.Component {
     this.state = {
       currState: 'board', // board, question, hint, answer
       categories: null,
-      cardStates: Array(Array(5).fill(null)), // done question -> checkmark
+      cardsAnswered: null, // array of true/falses per card -> if true -> card greyed out
       currCardInd: { col: null, row: null },
       currHint: null,
       csv: null,
@@ -38,16 +38,49 @@ class Game extends React.Component {
     this.setState(newState);
   }
 
-  componentDidMount() {
-    this.callServer();
+  /**
+   * Sets cardsAnswered at the specified row and column to true (or false, if specified by
+   * changeToFalse=true). This causes the card to be 'greyed out', indicating it has been
+   * answered.
+   * @param {*} row 
+   * @param {*} col 
+   */
+  setAnswered(row, col, changeToFalse) {
+    let newCardsAnswered = this.state.cardsAnswered.slice(); // copy the array so that we don't mutate it
+    if (!changeToFalse) {
+      newCardsAnswered[row][col] = true;
+    } else {
+      newCardsAnswered[row][col] = false;
+    }
+    this.setState({ cardsAnswered: newCardsAnswered });
   }
 
-  callServer() {
+  componentDidMount() {
+    this.callCSVServer();
+  }
+
+  callCSVServer() {
     fetch('http://localhost:9000/csvReader').then(res => res.text()).then(res => {
-      this.setState({ csv: res });
       const cats = this.readInfo(res, 'c'); // c -> categories
-      this.setState({ categories: cats });
+      return { csv: res, categories: cats };
+    }).then((newState) => {
+      this.resetCardsAnswered(newState.csv);
+      this.setState(newState);
     });
+  }
+
+  resetCardsAnswered(csv) {
+    // set the states of all the cards to be 'unanswered'
+    // i.e., fill an array size of numCategories x 5 (since 500 points max) to falses
+    let cards = [];
+    let numCategories = this.readInfo(csv, 'c').length;
+    for (let row = 0; row < 5; row++) {
+      cards.push([]);
+      for (let col = 0; col < numCategories; col++) {
+        cards[row].push(false);
+      }
+    }
+    this.setState({ cardsAnswered: cards });
   }
 
   /**
@@ -59,7 +92,7 @@ class Game extends React.Component {
    * @param {*} key : e.g., 'c' to read category, 'q1' to read the second question
    */
   readInfo(csv, key) {
-    const jsonCsv = Papa.parse(this.state.csv, {
+    const jsonCsv = Papa.parse(csv, {
       header: true
     });
     let categories = [];
@@ -119,6 +152,7 @@ class Game extends React.Component {
               <CardRow
                 categories={this.state.categories}
                 currRow={i}
+                rowAnswered={this.state.cardsAnswered[i]}
                 setCurrState={this.setCurrState}
                 key={keyid} />
             </Grid>
@@ -150,6 +184,7 @@ class Game extends React.Component {
             col={this.state.currCardInd.col}
             currState={this.state.currState}
             setCurrState={this.setCurrState}
+            setAnswered={() => this.setAnswered(this.state.currCardInd.row, this.state.currCardInd.col)}
             // need hints a priori to render hint buttons correctly
             hint1={this.getHint(this.state.currCardInd.row, this.state.currCardInd.col, 1)}
             hint2={this.getHint(this.state.currCardInd.row, this.state.currCardInd.col, 2)}
@@ -183,6 +218,7 @@ function CardRow(props) {
         text={pts}
         col={col}
         row={props.currRow}
+        answered={props.rowAnswered[col]}
         setCurrState={props.setCurrState}
         key={keyid}
       />);

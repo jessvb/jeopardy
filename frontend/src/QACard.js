@@ -58,9 +58,7 @@ class QACard extends React.Component {
     getHintBtn(hint, hintNum) {
         const { classes } = this.props;
         let hintBtn = // default (no hint) is greyed out:
-            (<Paper
-                className={clsx(classes.verticalCenter, classes.hintBtn)}
-                style={{ backgroundColor: 'darkgrey' }}>
+            (<Paper className={clsx(classes.verticalCenter, classes.hintBtn, classes.greyedOut)}>
                 {hintNum}
             </Paper>);
         if (hint) {
@@ -109,7 +107,7 @@ class QACard extends React.Component {
                 btns = (
                     <div className={classes.goBackBtnZone}>
                         <Paper
-                            className={clsx(classes.verticalCenter, classes.goBackBtn)} // todo(eventually): update go back btn style
+                            className={clsx(classes.verticalCenter, classes.goBackBtn)}
                             onClick={() => (this.props.setCurrState('question'))}>
                             Go Back
                             </Paper>
@@ -121,15 +119,21 @@ class QACard extends React.Component {
                     <Grid container className={classes.teamPtsBtnZone}>
                         <Paper
                             className={clsx(classes.verticalCenter, classes.teamPtsBtn)}
-                            onClick={() => (this.props.setCurrState('board'))}>
+                            onClick={() => {
+                                this.props.setAnswered();
+                                this.props.setCurrState('board');
+                            }}>
                             {this.props.pts} for Team 1
                         </Paper>
                         <Paper
                             className={clsx(classes.verticalCenter, classes.teamPtsBtn)}
-                            onClick={() => (this.props.setCurrState('board'))}>
+                            onClick={() => {
+                                this.props.setAnswered();
+                                this.props.setCurrState('board');
+                            }}>
                             {this.props.pts} for Team 2
                         </Paper>
-                    </Grid>
+                    </Grid >
                 );
                 break;
             default:

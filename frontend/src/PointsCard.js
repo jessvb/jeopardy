@@ -7,9 +7,17 @@ import clsx from 'clsx';
 class PointsCard extends React.Component {
     getColourClass() {
         const { classes } = this.props;
-        // get a number between 0 & 4 based on the column:
-        const colourNum = this.props.col - 5 * Math.floor(this.props.col / 5);
-        return classes[('card' + colourNum)];
+        let className = '';
+        if (this.props.answered) {
+            // the card should be greyed out
+            className = 'greyedOut';
+        } else {
+            // the card hasn't been answered yet, so it should be coloured.
+            // get a number between 0 & 4 based on the column:
+            const colourNum = this.props.col - 5 * Math.floor(this.props.col / 5);
+            className = ('card' + colourNum);
+        }
+        return classes[className];
     }
     render() {
         const { classes, setCurrState, row, col } = this.props;

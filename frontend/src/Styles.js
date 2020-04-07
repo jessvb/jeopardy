@@ -139,6 +139,9 @@ function styles(theme) {
         cardAns4: {
             backgroundColor: '#eafafc',
         },
+        greyedOut: {
+            backgroundColor: 'darkgrey',
+        },
     });
 }
 
