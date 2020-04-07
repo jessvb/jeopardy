@@ -3,7 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import styles from './Styles';
 import PointsCard from './PointsCard';
-import QuestionCard from './QuestionCard';
+import QACard from './QACard';
 import Title from './Title';
 import Box from '@material-ui/core/Box';
 import Papa from 'papaparse';
@@ -17,7 +17,7 @@ class Game extends React.Component {
       categories: null,
       cardStates: Array(Array(5).fill(null)), // done question -> checkmark
       currCardInd: { col: null, row: null },
-      currHintNum: null,
+      currHint: null,
       csv: null,
     };
   }
@@ -27,10 +27,10 @@ class Game extends React.Component {
    * question, a hint, or an answer) from within a subcomponent (i.e., a QuestionCard).
    * @param {*} state : string containing, 'board', 'question', 'hint', or 'answer'
    */
-  setCurrState(state, hintNum, currCardInd) {
+  setCurrState(state, hint, currCardInd) {
     let newState = { currState: state };
-    if (hintNum) {
-      newState.currHintNum = hintNum;
+    if (hint) {
+      newState.currHint = hint;
     }
     if (currCardInd) {
       newState.currCardInd = currCardInd;
@@ -88,7 +88,7 @@ class Game extends React.Component {
    * and the hint number (1-3).
    */
   getHint(row, col, num) {
-    return this.readInfo(this.state.csv, 'h' + row + '_' + (num - 1))[col];
+    return this.readInfo(this.state.csv, 'h' + row + '_' + (parseInt(num) - 1))[col];;
   }
 
   /**
@@ -107,6 +107,8 @@ class Game extends React.Component {
       // render loading state:
       currGameBoard = (<div>Loading...</div>);
     } else {
+      let mainText = '';
+      let isQAH = false; // is question/answer/hint
       switch (this.state.currState) {
         case 'board':
           extraRootStyle = {};
@@ -123,24 +125,37 @@ class Game extends React.Component {
           }
           break;
         case 'question':
-          extraRootStyle = { backgroundColor: '#f8f8f8' };
-          currGameBoard =
-            <QuestionCard
-              question={this.getQuestion(this.state.currCardInd.row, this.state.currCardInd.col)}
-              category={this.state.categories[this.state.currCardInd.col]}
-              pts={Game.getPoints(this.state.currCardInd.row)}
-              col={this.state.currCardInd.col}
-              setCurrState={this.setCurrState}
-              key={'question'}
-            />
+          mainText = this.getQuestion(this.state.currCardInd.row, this.state.currCardInd.col);
+          isQAH = true;
           break;
         case 'hint':
+          mainText = this.state.currHint;
+          isQAH = true;
           break;
         case 'answer':
+          mainText = this.getAnswer(this.state.currCardInd.row, this.state.currCardInd.col);
+          isQAH = true;
           break;
         default:
           currGameBoard = (<div>That's strange! The system reached an unknown state...
             Try refreshing.</div>);
+      }
+      if (isQAH) {
+        extraRootStyle = { backgroundColor: '#f8f8f8' };
+        currGameBoard = (
+          <QACard
+            text={mainText}
+            category={this.state.categories[this.state.currCardInd.col]}
+            pts={Game.getPoints(this.state.currCardInd.row)}
+            col={this.state.currCardInd.col}
+            currState={this.state.currState}
+            setCurrState={this.setCurrState}
+            // need hints a priori to render hint buttons correctly
+            hint1={this.getHint(this.state.currCardInd.row, this.state.currCardInd.col, 1)}
+            hint2={this.getHint(this.state.currCardInd.row, this.state.currCardInd.col, 2)}
+            hint3={this.getHint(this.state.currCardInd.row, this.state.currCardInd.col, 3)}
+            key={'question'}
+          />);
       }
     }
     return (
@@ -163,29 +178,28 @@ function CardRow(props) {
   let pts = Game.getPoints(props.currRow);
   for (let col = 0; col < props.categories.length; col++) {
     let keyid = "col" + col + "-" + pts;
+    let card =
+      (<PointsCard
+        text={pts}
+        col={col}
+        row={props.currRow}
+        setCurrState={props.setCurrState}
+        key={keyid}
+      />);
     if (props.currRow !== 0) {
-      cards[col] = (<Grid item xs key={keyid}>
-        <PointsCard
-          text={pts}
-          col={col}
-          row={props.currRow}
-          setCurrState={props.setCurrState}
-          key={keyid}
-        /></Grid>);
+      cards[col] =
+        (<Grid item xs key={keyid}>
+          {card}
+        </Grid>);
     } else {
       // If it's the first row, put category titles:
-      cards[col] = <Grid item xs key={keyid}>
-        <Box mb={2}>
-          <Title text={props.categories[col]} titleType='category' />
-        </Box>
-        <PointsCard
-          text={pts}
-          col={col}
-          row={props.currRow}
-          setCurrState={props.setCurrState}
-          key={keyid}
-        />
-      </Grid>;
+      cards[col] =
+        (<Grid item xs key={keyid}>
+          <Box mb={2}>
+            <Title text={props.categories[col]} titleType='category' />
+          </Box>
+          {card}
+        </Grid>);
     }
   }
   return (

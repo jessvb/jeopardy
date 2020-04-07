@@ -18,7 +18,6 @@ class PointsCard extends React.Component {
                 className={clsx(classes.pointsCard, this.getColourClass())}
                 wrap="nowrap"
                 onClick={function () {
-                    console.log('clicked card');
                     setCurrState('question', null, { row: row, col: col });
                 }}
             >
