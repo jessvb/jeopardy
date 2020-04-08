@@ -132,6 +132,57 @@ class Game extends React.Component {
     return (row + 1) * 100;
   }
 
+  createGameBoard() {
+    const { classes } = this.props;
+    let gameBoard;
+    let cards = [];
+    for (let i = 0; i < 5; i++) {
+      let keyid = "row" + Game.getPoints(i);
+      cards[i] =
+        (<Grid container item key={keyid}>
+          <CardRow
+            categories={this.state.categories}
+            currRow={i}
+            rowAnswered={this.state.cardsAnswered[i]}
+            setCurrState={this.setCurrState}
+            key={keyid} />
+        </Grid>);
+    }
+    gameBoard = (<Grid container className={classes.boardZone}>
+      <Grid style={{ width: '80vw', marginTop: '2vh' }} item>
+        {cards}
+      </Grid>
+      <Grid item>
+        <Grid container className={classes.teamBoardZone}>
+          <Grid item>
+            Team 1: TODO pts
+                </Grid>
+          <Grid item>
+            Team 2: TODO pts
+                </Grid>
+        </Grid>
+      </Grid>
+    </Grid>);
+    return gameBoard;
+  }
+
+  createQACard(mainText) {
+    return (<QACard
+      text={mainText}
+      category={this.state.categories[this.state.currCardInd.col]}
+      pts={Game.getPoints(this.state.currCardInd.row)}
+      col={this.state.currCardInd.col}
+      currState={this.state.currState}
+      setCurrState={this.setCurrState}
+      setAnswered={() => this.setAnswered(this.state.currCardInd.row, this.state.currCardInd.col)}
+      // need hints a priori to render hint buttons correctly
+      hint1={this.getHint(this.state.currCardInd.row, this.state.currCardInd.col, 1)}
+      hint2={this.getHint(this.state.currCardInd.row, this.state.currCardInd.col, 2)}
+      hint3={this.getHint(this.state.currCardInd.row, this.state.currCardInd.col, 3)}
+      key={'question'}
+    />);
+  }
+
   render() {
     const { classes } = this.props;
     let currGameBoard;
@@ -145,35 +196,7 @@ class Game extends React.Component {
       switch (this.state.currState) {
         case 'board':
           extraRootStyle = {};
-          let cards = [];
-          for (let i = 0; i < 5; i++) {
-            let keyid = "row" + Game.getPoints(i);
-            cards[i] =
-              (<Grid container item key={keyid}>
-              <CardRow
-                  categories={this.state.categories}
-                  currRow={i}
-                  rowAnswered={this.state.cardsAnswered[i]}
-                  setCurrState={this.setCurrState}
-                  key={keyid} />
-              </Grid>);
-          }
-          currGameBoard =
-            (<Grid container className={classes.boardZone}>
-              <Grid style={{ width: '80vw', marginTop: '2vh'}} item>
-                {cards}
-              </Grid>
-              <Grid item>
-                <Grid container className={classes.teamBoardZone}>
-                  <Grid item>
-                    Team 1: TODO pts
-                  </Grid>
-                  <Grid item>
-                    Team 2: TODO pts
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>);
+          currGameBoard = this.createGameBoard();
           break;
         case 'question':
           mainText = this.getQuestion(this.state.currCardInd.row, this.state.currCardInd.col);
@@ -193,21 +216,7 @@ class Game extends React.Component {
       }
       if (isQAH) {
         extraRootStyle = { backgroundColor: '#f8f8f8' };
-        currGameBoard = (
-          <QACard
-            text={mainText}
-            category={this.state.categories[this.state.currCardInd.col]}
-            pts={Game.getPoints(this.state.currCardInd.row)}
-            col={this.state.currCardInd.col}
-            currState={this.state.currState}
-            setCurrState={this.setCurrState}
-            setAnswered={() => this.setAnswered(this.state.currCardInd.row, this.state.currCardInd.col)}
-            // need hints a priori to render hint buttons correctly
-            hint1={this.getHint(this.state.currCardInd.row, this.state.currCardInd.col, 1)}
-            hint2={this.getHint(this.state.currCardInd.row, this.state.currCardInd.col, 2)}
-            hint3={this.getHint(this.state.currCardInd.row, this.state.currCardInd.col, 3)}
-            key={'question'}
-          />);
+        currGameBoard = this.createQACard(mainText);
       }
     }
     return (
