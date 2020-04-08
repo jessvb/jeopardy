@@ -145,18 +145,35 @@ class Game extends React.Component {
       switch (this.state.currState) {
         case 'board':
           extraRootStyle = {};
-          currGameBoard = [];
+          let cards = [];
           for (let i = 0; i < 5; i++) {
             let keyid = "row" + Game.getPoints(i);
-            currGameBoard[i] = <Grid container item xs={10} spacing={3} key={keyid}>
+            cards[i] =
+              (<Grid container item key={keyid}>
               <CardRow
-                categories={this.state.categories}
-                currRow={i}
-                rowAnswered={this.state.cardsAnswered[i]}
-                setCurrState={this.setCurrState}
-                key={keyid} />
-            </Grid>
+                  categories={this.state.categories}
+                  currRow={i}
+                  rowAnswered={this.state.cardsAnswered[i]}
+                  setCurrState={this.setCurrState}
+                  key={keyid} />
+              </Grid>);
           }
+          currGameBoard =
+            (<Grid container className={classes.boardZone}>
+              <Grid style={{ width: '80vw', marginTop: '2vh'}} item>
+                {cards}
+              </Grid>
+              <Grid item>
+                <Grid container className={classes.teamBoardZone}>
+                  <Grid item>
+                    Team 1: TODO pts
+                  </Grid>
+                  <Grid item>
+                    Team 2: TODO pts
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>);
           break;
         case 'question':
           mainText = this.getQuestion(this.state.currCardInd.row, this.state.currCardInd.col);
