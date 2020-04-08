@@ -18,6 +18,8 @@ class Game extends React.Component {
       cardsAnswered: null, // array of true/falses per card -> if true -> card greyed out
       currCardInd: { col: null, row: null },
       currHint: null,
+      team1pts: 0,
+      team2pts: 0,
       csv: null,
     };
   }
@@ -53,6 +55,16 @@ class Game extends React.Component {
       newCardsAnswered[row][col] = false;
     }
     this.setState({ cardsAnswered: newCardsAnswered });
+  }
+
+  addPoints(teamNum, row) {
+    if (teamNum === 1) {
+      let prevPts = this.state.team1pts;
+      this.setState({ team1pts: (prevPts + Game.getPoints(row)) });
+    } else if (teamNum === 2) {
+      let prevPts = this.state.team2pts;
+      this.setState({ team2pts: (prevPts + Game.getPoints(row)) });
+    }
   }
 
   componentDidMount() {
@@ -155,10 +167,10 @@ class Game extends React.Component {
       <Grid item>
         <Grid container className={classes.teamBoardZone}>
           <Grid item>
-            Team 1: TODO pts
+            Team 1: {this.state.team1pts} pts
                 </Grid>
           <Grid item>
-            Team 2: TODO pts
+            Team 2: {this.state.team2pts} pts
                 </Grid>
         </Grid>
       </Grid>
@@ -175,6 +187,7 @@ class Game extends React.Component {
       currState={this.state.currState}
       setCurrState={this.setCurrState}
       setAnswered={() => this.setAnswered(this.state.currCardInd.row, this.state.currCardInd.col)}
+      addPoints={(teamNum) => this.addPoints(teamNum, this.state.currCardInd.row)}
       // need hints a priori to render hint buttons correctly
       hint1={this.getHint(this.state.currCardInd.row, this.state.currCardInd.col, 1)}
       hint2={this.getHint(this.state.currCardInd.row, this.state.currCardInd.col, 2)}

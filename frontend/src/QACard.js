@@ -121,6 +121,7 @@ class QACard extends React.Component {
                             className={clsx(classes.verticalCenter, classes.teamPtsBtn)}
                             onClick={() => {
                                 this.props.setAnswered();
+                                this.props.addPoints(1);
                                 this.props.setCurrState('board');
                             }}>
                             {this.props.pts} for Team 1
@@ -129,6 +130,7 @@ class QACard extends React.Component {
                             className={clsx(classes.verticalCenter, classes.teamPtsBtn)}
                             onClick={() => {
                                 this.props.setAnswered();
+                                this.props.addPoints(2);
                                 this.props.setCurrState('board');
                             }}>
                             {this.props.pts} for Team 2
