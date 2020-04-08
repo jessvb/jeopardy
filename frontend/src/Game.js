@@ -12,6 +12,7 @@ class Game extends React.Component {
   constructor(props) {
     super(props);
     this.setCurrState = this.setCurrState.bind(this);
+    this.addPointsManually = this.addPointsManually.bind(this);
     this.state = {
       currState: 'board', // board, question, hint, answer
       categories: null,
@@ -64,11 +65,14 @@ class Game extends React.Component {
     } else if (teamNum === 2) {
       let prevPts = this.state.team2pts;
       this.setState({ team2pts: (prevPts + Game.getPoints(row)) });
+    } else {
+      console.error('Unknown team number, ' + teamNum + '. Points weren\'t added.');
     }
   }
 
   componentDidMount() {
     this.callCSVServer();
+    window.addpts = this.addPointsManually;
   }
 
   callCSVServer() {
@@ -134,6 +138,23 @@ class Game extends React.Component {
    */
   getHint(row, col, num) {
     return this.readInfo(this.state.csv, 'h' + row + '_' + (parseInt(num) - 1))[col];;
+  }
+
+  /**
+   * Add bonus points manually from the console. 
+   * @param {*} pts 
+   * @param {*} teamNum 
+   */
+  addPointsManually(pts, teamNum) {
+    if (teamNum === 1) {
+      let prevPts = this.state.team1pts;
+      this.setState({ team1pts: (prevPts + pts) });
+    } else if (teamNum === 2) {
+      let prevPts = this.state.team2pts;
+      this.setState({ team2pts: (prevPts + pts) });
+    } else {
+      console.error('Unknown team number, ' + teamNum + '. Points weren\'t added.');
+    }
   }
 
   /**
