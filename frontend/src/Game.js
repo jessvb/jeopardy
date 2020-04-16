@@ -71,18 +71,24 @@ class Game extends React.Component {
   }
 
   componentDidMount() {
-    this.callCSVServer();
     window.addpts = this.addPointsManually;
   }
 
-  callCSVServer() {
-    fetch('http://localhost:9000/csvReader').then(res => res.text()).then(res => {
-      const cats = this.readInfo(res, 'c'); // c -> categories
-      return { csv: res, categories: cats };
-    }).then((newState) => {
+  handleCSVUpload(e) {
+    var file = e.target.files[0];
+    var reader = new FileReader();
+    reader.readAsText(file);
+    reader.onload = (function (event) {
+      var csvData = event.target.result;
+      const cats = this.readInfo(csvData, 'c'); // c -> categories
+      const newState = { csv: csvData, categories: cats };
       this.resetCardsAnswered(newState.csv);
       this.setState(newState);
-    });
+    }).bind(this);
+    reader.onerror = function () {
+      alert('Unable to read ' + file.fileName +
+        '. Is it a CSV file? Is it in the format as outlined by the readme?');
+    };
   }
 
   resetCardsAnswered(csv) {
@@ -222,8 +228,19 @@ class Game extends React.Component {
     let currGameBoard;
     let extraRootStyle = {};
     if (!this.state.categories) {
-      // render loading state:
-      currGameBoard = (<div>Loading...</div>);
+      // render upload state:
+      currGameBoard = (
+        <div>
+          <p>
+            Upload a CSV file with questions and answers, as described by the <span> </span>
+            <a href="https://github.com/jessvb/jeopardy/blob/master/README.md#custom-jeopardy-questions-and-answers">readme</a> <span> </span>
+            and <a href="https://github.com/jessvb/jeopardy/blob/master/server/src/jeopardy_qa.template.csv">shown in the example on GitHub</a>.
+          </p>
+          <div style={{ display: 'flex', justifyContent: 'center', }}>
+            <input type="file" name="File Upload" accept=".csv" onChange={(e) => { this.handleCSVUpload(e) }} />
+          </div>
+        </div>
+      );
     } else {
       let mainText = '';
       let isQAH = false; // is question/answer/hint
