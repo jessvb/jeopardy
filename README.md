@@ -2,7 +2,7 @@
 A jeopardy web app implemented in React.js. Add custom questions and answers to the app, and play with friends :tada:
 
 ## demo
-To create your own custom jeopardy game (without cloning this repo), first download and edit the csv file as described in the [custom jeopardy questions and answers](#custom-jeopardy-questions-and-answers) section. Next go to [this page](TODO-LINK), upload the file, and play your custom game :blush:
+To create your own custom jeopardy game (without cloning this repo), first download and edit the csv file as described in the [custom jeopardy questions and answers](#custom-jeopardy-questions-and-answers) section. Next go to [this page](https://jessvb.github.io/jeopardy/), upload the file, and play your custom game :blush:
 
 After uploading, you should see a web page similar to the following:
 ![jeopardy web app screenshot](https://github.com/jessvb/jeopardy/blob/master/jeopardy_example_screenshot.png)
