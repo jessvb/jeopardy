@@ -230,11 +230,16 @@ class Game extends React.Component {
     if (!this.state.categories) {
       // render upload state:
       currGameBoard = (
-        <div>
-          <p>
-            Upload a CSV file with questions and answers, as described by the "custom jeopardy questions and answers section" of the <span> </span>
-            <a href="https://github.com/jessvb/jeopardy/blob/static-upload-csv/README.md#custom-jeopardy-questions-and-answers">readme</a> <span> </span>
-            and <a href="https://github.com/jessvb/jeopardy/blob/static-upload-csv/src/jeopardy_qa.template.csv">shown in the example on GitHub</a>.
+        <div style={{ width: '50vw' }}>
+          <h1 style={{ textAlign: 'center', }}>
+            Welcome to jessvb's jeopardy!
+          </h1>
+          <p style={{ textAlign: 'center', }}>
+            To get started, upload a CSV file with questions and answers, as described by the "custom jeopardy questions
+            and answers section" of the <span> </span>
+            <a href="https://github.com/jessvb/jeopardy/blob/static-upload-csv/README.md#custom-jeopardy-questions-and-answers">readme</a>
+            <span> </span> and <span> </span>
+            <a href="https://github.com/jessvb/jeopardy/blob/static-upload-csv/src/jeopardy_qa.template.csv">shown in the example on GitHub</a>.
           </p>
           <div style={{ display: 'flex', justifyContent: 'center', }}>
             <input type="file" name="File Upload" accept=".csv" onChange={(e) => { this.handleCSVUpload(e) }} />
