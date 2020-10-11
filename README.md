@@ -1,8 +1,8 @@
 # jeopardy
 A jeopardy web app implemented in React.js. Add custom questions and answers to the app, and play with friends :tada:
 
-## Demo
-You can play this jeopardy game by going to this [demo page](https://jessvb.github.io/jeopardy/), downloading and editing the [csv template of questions and answers](https://github.com/jessvb/jeopardy/blob/static-upload-csv/src/jeopardy_qa.template.csv), and uploading the edited csv to the demo.
+## demo
+You can play the jeopardy game by going to this [demo page](https://jessvb.github.io/jeopardy/), downloading and editing the [csv template of questions and answers](https://github.com/jessvb/jeopardy/blob/static-upload-csv/src/jeopardy_qa.template.csv), and uploading your personalized csv to the demo page.
 
 ## setup
 ### custom jeopardy questions and answers
